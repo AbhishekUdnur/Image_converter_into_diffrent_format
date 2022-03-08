@@ -118,6 +118,7 @@ def do_upload():
 			
 			try:
 				pass
+				
 			except OSError:
 				im = Image.open(save_path + ext)
 				e = im.convert('RGB')
