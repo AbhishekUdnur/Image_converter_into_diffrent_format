@@ -1,5 +1,5 @@
-# webp-image-converter
-Python based image converter with web interface; converts PNG, JPEG or JPG to WebP image format.   
+# image-format-converter
+Python based image converter with web interface; converts image into other formats.   
 
 ## Run
 You should have Pillow installed. Install if you don't have it:
@@ -18,11 +18,9 @@ Go to port 8080 on your localhost (127.0.0.1:8080)
 Bottle specification can be found [here](http://bottlepy.org/docs/dev/).
 
 ## WebP
-WebP is the image format that supports lossy and lossless compression, as well as animation and alpha transparency.
-More about WebP format is in the [Google's new image standart](https://developers.google.com/speed/webp/).
-
+this coverter can also convert images to webp format
 ## Browser Compatibility
 WebP is currently available on few browsers so check [this](https://caniuse.com/#feat=webp) first. 
+(if error occured please do check the 'media' folder is there or not, if not then create that folder('media') into your workspace)
 
-## if error occured please do check the 'media' folder is there or not, if not then create that folder('media') into your workspace
 
