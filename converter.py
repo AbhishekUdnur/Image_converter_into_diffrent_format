@@ -1,6 +1,6 @@
 from bottle import Bottle, route, run, template, static_file
 from bottle import abort, get, post, request, response
-from bottle import redirect
+from bottle import redirect, static_file
 import os
 from PIL import Image
 
@@ -34,6 +34,14 @@ def get_form():
 					<div>
 					Select a file: <br/> <input type="file" name="upload" />
 					</div>
+					<select name="output_file" id="out">
+					<option value="gif">GIF</option>
+					<option value="png">PNG</option>
+					<option value="jpeg">JPEG</option>
+					<option value="webp">WEBP</option>
+					<option value="jpg">jpg</option>
+					</select>
+					<br/>
 					<input class='button'
 					type="submit" value="Start upload" />
 				</form>
@@ -87,8 +95,10 @@ def do_upload():
 	quality = 100
 	optional_name = request.forms.get('optional_name')
 	uploaded = request.files.get('upload')
+	out_file_ext = request.forms.get('output_file')
+	print(out_file_ext)
 	name, ext = os.path.splitext(uploaded.filename)
-	if ext not in ('.png', '.jpg', '.jpeg'):
+	if ext.lower() not in ('.png', '.jpg', '.jpeg', '.webp', '.gif'):
 	    return 'File extension not allowed.'
 
 	if optional_name != '':
@@ -101,12 +111,26 @@ def do_upload():
 	except IOError:
 	    os.remove(save_path + ext)
 	    uploaded.save(save_path + ext)
+	try:
+		im = Image.open(save_path + ext)
+		output_path = get_save_path_with_format(name, '.'+out_file_ext)
+		im.save(output_path, out_file_ext, quality=quality)
+		os.remove(save_path + ext)
+		redirect("/converted/%s" % name + '.'+out_file_ext)
 
-	im = Image.open(save_path + ext)
-	output_path = get_save_path_with_format(name, '.webp')
-	im.save(output_path, 'webp', quality=quality)
-	os.remove(save_path + ext)
-	redirect("/converted/%s" % name + '.webp')
+	except KeyError:
+		im = Image.open(save_path + ext)
+		e = im.convert('RGB')
+		output_path = get_save_path_with_format(name, '.'+out_file_ext)
+		e.save(output_path.split('.')[0] +'.' + 'jpg')
+		os.remove(save_path + ext)
+		redirect("/converted/%s" % name + '.'+out_file_ext)
+
+	
+@converter.route('/download/<filename:path>')
+def send_image(filename):
+	print('filename - ',filename)
+	return static_file(filename,root='/', download=filename)
 
 
 @converter.route('/converted/<filename:path>')
@@ -118,4 +142,5 @@ def updloaded(filename):
 
 
 
-run(converter, host='localhost', port='8080')
+run(converter, host='localhost', port='8080', debug=True)
+

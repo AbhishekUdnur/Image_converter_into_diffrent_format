@@ -24,3 +24,5 @@ More about WebP format is in the [Google's new image standart](https://developer
 ## Browser Compatibility
 WebP is currently available on few browsers so check [this](https://caniuse.com/#feat=webp) first. 
 
+## if error occured please do check the 'media' folder is there or not, if not then create that folder('media') into your workspace
+
