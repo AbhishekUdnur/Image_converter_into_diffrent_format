@@ -25,7 +25,7 @@ def get_form():
 		</head>
 		<body>
 	    	<div class="wrapper">
-				<h2><strong>Convert image to WebP format</strong></h2>
+				<h2><strong>IMAGE_FORMAT_CONVERTER</strong></h2>
 				<form action="/"
 				method="post" enctype="multipart/form-data">
 					<div>
