@@ -111,14 +111,29 @@ def do_upload():
 	except IOError:
 	    os.remove(save_path + ext)
 	    uploaded.save(save_path + ext)
+	
 	try:
-		im = Image.open(save_path + ext)
-		output_path = get_save_path_with_format(name, '.'+out_file_ext)
-		im.save(output_path, out_file_ext, quality=quality)
-		os.remove(save_path + ext)
-		redirect("/converted/%s" % name + '.'+out_file_ext)
-
+		
+		if ext.lower() not in ('.png', '.jpg', '.webp', '.gif'):
+			
+			try:
+				pass
+			except OSError:
+				im = Image.open(save_path + ext)
+				e = im.convert('RGB')
+				output_path = get_save_path_with_format(name, '.'+out_file_ext)
+				e.save(output_path.split('.')[0] +'.' + 'jpeg')
+				os.remove(save_path + ext)
+				redirect("/converted/%s" % name + '.'+out_file_ext)
+		else:
+			im = Image.open(save_path + ext)
+			output_path = get_save_path_with_format(name, '.'+out_file_ext)
+			im.save(output_path, out_file_ext, quality=quality)
+			os.remove(save_path + ext)
+			redirect("/converted/%s" % name + '.'+out_file_ext)
+	
 	except KeyError:
+		
 		im = Image.open(save_path + ext)
 		e = im.convert('RGB')
 		output_path = get_save_path_with_format(name, '.'+out_file_ext)
@@ -126,12 +141,10 @@ def do_upload():
 		os.remove(save_path + ext)
 		redirect("/converted/%s" % name + '.'+out_file_ext)
 
-	
 @converter.route('/download/<filename:path>')
 def send_image(filename):
 	print('filename - ',filename)
 	return static_file(filename,root='/', download=filename)
-
 
 @converter.route('/converted/<filename:path>')
 def updloaded(filename):
@@ -139,7 +152,6 @@ def updloaded(filename):
         filename,
         root=BASE_DIR + '/media',
         mimetype='image/webp')
-
 
 
 run(converter, host='localhost', port='8080', debug=True)
