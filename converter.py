@@ -93,6 +93,7 @@ def do_upload():
     quality = 100
     optional_name = request.forms.get('optional_name')
     uploaded = request.files.get('upload')
+    global out_file_ext
     out_file_ext = request.forms.get('output_file')
     print(out_file_ext)
     name, ext = os.path.splitext(uploaded.filename)
@@ -137,7 +138,7 @@ def updloaded(filename):
     return static_file(
         filename,
         root=BASE_DIR + '/media',
-        mimetype='image/webp')
+        mimetype=f'image/{out_file_ext}')
 
 
 run(converter, host='localhost', port='8080', debug=True)
