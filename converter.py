@@ -137,6 +137,8 @@ def do_upload():
 		
 		im = Image.open(save_path + ext)
 		e = im.convert('RGB')
+		output_path = get_save_path_with_format(name, '.'+out_file_ext)
+		e.save(output_path.split('.')[0] +'.' + 'jpg')
 		os.remove(save_path + ext)
 		redirect("/converted/%s" % name + '.'+out_file_ext)
 
